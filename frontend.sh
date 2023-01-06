@@ -19,7 +19,7 @@ echo "Copying Roboshop conf to /etc/nginx/default.d location"
 cp $current_dir/files/roboshop.conf /etc/nginx/default.d/roboshop.conf
 
 echo "Renaming each service with its Address"
-sed -i -e "/catalogue/ s/localhost/catalogue.learninguser.online" /etc/nginx/default.d/roboshop.conf
+sed -i -e "/catalogue/ s/localhost/catalogue.learninguser.online/" /etc/nginx/default.d/roboshop.conf
 
 echo "Starting nginx service"
 systemctl enable nginx &>> $log_file

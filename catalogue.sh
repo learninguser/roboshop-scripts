@@ -12,10 +12,10 @@ echo -e "\e[35madding roboshop user\e[0m"
 useradd roboshop &>> $log_file
 
 echo -e "\e[35mDownloading and extracting application code\e[0m"
-mkdir /app
+mkdir -p /app
 curl -L -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue.zip &>> $log_file
 cd /app 
-unzip /tmp/catalogue.zip &>> $log_file
+unzip -o /tmp/catalogue.zip &>> $log_file
 
 echo -e "\e[35mDownloading and installing dependencies\e[0m"
 cd /app 

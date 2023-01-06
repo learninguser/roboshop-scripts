@@ -3,7 +3,7 @@
 ##### Change these values ###
 ZONE_ID="Z097444713DPZHXLPARU8"
 DOMAIN="learninguser.online"
-SG_NAME="allow-all"
+SG_NAME="Allow-all"
 env=dev
 #############################
 

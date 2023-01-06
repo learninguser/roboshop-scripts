@@ -17,7 +17,7 @@ status_check $log_file
 
 print_message "Extracting frontend scripts"
 cd /usr/share/nginx/html 
-unzip -o /tmp/frontend.zip
+unzip -o /tmp/frontend.zip &>> $log_file
 status_check $log_file
 
 print_message "Copying Roboshop conf to /etc/nginx/default.d location"

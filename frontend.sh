@@ -20,4 +20,4 @@ cp $current_dir/files/roboshop.conf /etc/nginx/default.d/roboshop.conf
 
 echo "Starting nginx service"
 systemctl enable nginx &>> $log_file
-systemctl start nginx &>> $log_file
+systemctl restart nginx &>> $log_file

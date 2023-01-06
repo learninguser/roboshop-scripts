@@ -10,4 +10,4 @@ sed -i "s/127.0.0.1/0.0.0.0/" /etc/mongod.conf
 
 echo "Starting MongoDB service"
 systemctl enable mongod &>> $log_file
-systemctl start mongod &>> $log_file
+systemctl restart mongod &>> $log_file

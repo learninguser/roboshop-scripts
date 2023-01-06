@@ -17,7 +17,7 @@ curl -L -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalo
 cd /app 
 unzip /tmp/catalogue.zip &>> $log_file
 
-echo "Downloading and installing dpendencies"
+echo "Downloading and installing dependencies"
 cd /app 
 npm install &>> $log_file
 

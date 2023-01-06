@@ -13,7 +13,7 @@ curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend.z
 
 echo "Extracting frontend scripts"
 cd /usr/share/nginx/html 
-unzip /tmp/frontend.zip
+unzip -o /tmp/frontend.zip
 
 echo "Copying Roboshop conf to /etc/nginx/default.d location"
 cp $current_dir/files/roboshop.conf /etc/nginx/default.d/roboshop.conf

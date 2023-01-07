@@ -12,6 +12,19 @@ print_message(){
     echo -e "\e[1m$1\e[0m"
 }
 
+LOAD_SCHEMA(){
+  if [ $schema == "true" ]; then
+    cp $current_dir/files/mongo.repo /etc/yum.repos.d/mongo.repo &>> $log_file
+    print_message "Installing mongodb"
+    yum install mongodb-org-shell -y &>> $log_file
+    status_check $log_file
+
+    print_message "Load schema"
+    mongo --host mongodb-dev.learninguser.online </app/schema/$component.js &>> $log_file
+    status_check $log_file
+  fi
+}
+
 NODEJS(){
   print_message "Setup NodeJS repos"
   curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>> $log_file
@@ -51,12 +64,5 @@ NODEJS(){
   systemctl restart $component &>> $log_file
   status_check $log_file
 
-  cp $current_dir/files/mongo.repo /etc/yum.repos.d/mongo.repo &>> $log_file
-  print_message "Installing mongodb"
-  yum install mongodb-org-shell -y &>> $log_file
-  status_check $log_file
-
-  print_message "Load schema"
-  mongo --host mongodb-dev.learninguser.online </app/schema/$component.js &>> $log_file
-  status_check $log_file
+  LOAD_SCHEMA
 }

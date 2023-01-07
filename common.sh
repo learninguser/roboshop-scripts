@@ -81,6 +81,7 @@ NODEJS(){
   print_message "Downloading and installing dependencies"
   cd /app
   npm install &>> $log_file
+  status_check $log_file
 
   SYSTEMD_SETUP
   LOAD_SCHEMA

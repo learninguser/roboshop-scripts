@@ -98,7 +98,7 @@ MAVEN(){
   mvn clean package &>> $log_file
   status_check $log_file
 
-  print_message ""
+  print_message "Copy App file to App Location"
   mv target/$component-1.0.jar $component.jar
   status_check $log_file
 

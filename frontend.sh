@@ -25,12 +25,9 @@ cp $current_dir/files/roboshop.conf /etc/nginx/default.d/roboshop.conf
 status_check $log_file
 
 print_message "Renaming each service with its Address"
-sed -i -e "/catalogue/ s/localhost/catalogue-dev.learninguser.online/" /etc/nginx/default.d/roboshop.conf
-sed -i -e "/user/ s/localhost/user-dev.learninguser.online/" /etc/nginx/default.d/roboshop.conf
-sed -i -e "/cart/ s/localhost/cart-dev.learninguser.online/" /etc/nginx/default.d/roboshop.conf
-sed -i -e "/shipping/ s/localhost/shipping-dev.learninguser.online/" /etc/nginx/default.d/roboshop.conf
-sed -i -e "/payment/ s/localhost/payment-dev.learninguser.online/" /etc/nginx/default.d/roboshop.conf
-
+for component in catalogue user cart shipping payment; do
+  sed -i -e "/$component/ s/localhost/$component-dev.learninguser.online/" /etc/nginx/default.d/roboshop.conf
+done
 status_check $log_file
 
 print_message "Starting nginx service"

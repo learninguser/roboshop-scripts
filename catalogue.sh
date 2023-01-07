@@ -4,4 +4,5 @@ current_dir=$(pwd)
 source common.sh
 component="catalogue"
 schema="true"
+schema_type="mongo"
 NODEJS

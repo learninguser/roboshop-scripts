@@ -12,28 +12,7 @@ print_message(){
     echo -e "\e[1m$1\e[0m"
 }
 
-LOAD_SCHEMA(){
-  if [ $schema == "true" ]; then
-    cp $current_dir/files/mongo.repo /etc/yum.repos.d/mongo.repo &>> $log_file
-    print_message "Installing mongodb"
-    yum install mongodb-org-shell -y &>> $log_file
-    status_check $log_file
-
-    print_message "Load schema"
-    mongo --host mongodb-dev.learninguser.online </app/schema/$component.js &>> $log_file
-    status_check $log_file
-  fi
-}
-
-NODEJS(){
-  print_message "Setup NodeJS repos"
-  curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>> $log_file
-  status_check $log_file
-
-  print_message "Install NodeJS"
-  yum install nodejs -y &>> $log_file
-  status_check $log_file
-
+APP_PREREQ(){
   print_message "adding roboshop user"
   id roboshop &>> $log_file
   if [ $? -ne 0 ]; then
@@ -47,22 +26,74 @@ NODEJS(){
   cd /app
   unzip -o /tmp/$component.zip &>> $log_file
   status_check $log_file
+}
+
+SYSTEMD_SETUP(){
+    cp $current_dir/files/$component.service /etc/systemd/system/$component.service
+    status_check $log_file
+
+    print_message "Load $component service"
+    systemctl daemon-reload &>> $log_file
+    status_check $log_file
+
+    print_message "Starting $component service"
+    systemctl enable $component &>> $log_file
+    systemctl restart $component &>> $log_file
+    status_check $log_file
+}
+
+LOAD_SCHEMA(){
+  if [ $schema == "true" ]; then
+    if [ $schema_type == "mongo" ]; then
+      cp $current_dir/files/mongo.repo /etc/yum.repos.d/mongo.repo &>> $log_file
+      print_message "Installing mongodb"
+      yum install mongodb-org-shell -y &>> $log_file
+      status_check $log_file
+
+      print_message "Load schema"
+      mongo --host mongodb-dev.learninguser.online </app/schema/$component.js &>> $log_file
+      status_check $log_file
+    fi
+    if [ $schema_type == "mysql" ]; then
+      print_message "Installing MySQL client"
+      yum install mysql -y &>> $log_file
+      status_check $log_file
+
+      print_message "Loading $component schema"
+      mysql -h mysql-dev.learninguser.online -uroot -p$mysql_root_password < /app/schema/shipping.sql
+    fi
+  fi
+}
+
+NODEJS(){
+  print_message "Setup NodeJS repos"
+  curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>> $log_file
+  status_check $log_file
+
+  print_message "Install NodeJS"
+  yum install nodejs -y &>> $log_file
+  status_check $log_file
+
+  APP_PREREQ
 
   print_message "Downloading and installing dependencies"
   cd /app
   npm install &>> $log_file
 
-  cp $current_dir/files/$component.service /etc/systemd/system/$component.service
+  SYSTEMD_SETUP
+  LOAD_SCHEMA
+}
+
+MAVEN(){
+  print_message "Installing Maven"
+  yum install maven -y &>> $log_file
   status_check $log_file
 
-  print_message "Load $component service"
-  systemctl daemon-reload &>> $log_file
+  print_message "Download the dependencies & build the application"
+  mvn clean package &>> $log_file
+  mv target/$component-1.0.jar $component.jar
   status_check $log_file
 
-  print_message "Starting $component service"
-  systemctl enable $component &>> $log_file
-  systemctl restart $component &>> $log_file
-  status_check $log_file
-
+  SYSTEMD_SETUP
   LOAD_SCHEMA
 }

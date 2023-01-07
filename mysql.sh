@@ -25,13 +25,9 @@ systemctl enable mysqld &>> $log_file
 systemctl start mysqld &>> $log_file
 status_check $log_file
 
+print_message "Changing default MySQL Root password"
 echo "show databases;" | mysql -uroot -p${mysql_root_password} &>> $log_file
 if [ $? -ne 0 ]; then
-  print_message "Changing default MySQL Root password"
   mysql_secure_installation --set-root-pass $mysql_root_password &>> $log_file
-  status_check $log_file
 fi
-
-print_message "Checking if the set password is working or not"
-mysql -uroot -p$mysql_root_password &>> $log_file
 status_check $log_file

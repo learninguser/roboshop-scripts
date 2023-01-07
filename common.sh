@@ -29,6 +29,7 @@ APP_PREREQ(){
 }
 
 SYSTEMD_SETUP(){
+    print_message "Configuring ${component} Service File"
     cp $current_dir/files/$component.service /etc/systemd/system/$component.service
     status_check $log_file
 
@@ -60,7 +61,8 @@ LOAD_SCHEMA(){
       status_check $log_file
 
       print_message "Loading $component schema"
-      mysql -h mysql-dev.learninguser.online -uroot -p$mysql_root_password < /app/schema/shipping.sql
+      mysql -h mysql-dev.learninguser.online -uroot -p$mysql_root_password < /app/schema/shipping.sql &>> $log_file
+      status_check $log_file
     fi
   fi
 }
@@ -91,6 +93,9 @@ MAVEN(){
 
   print_message "Download the dependencies & build the application"
   mvn clean package &>> $log_file
+  status_check $log_file
+
+  print_message ""
   mv target/$component-1.0.jar $component.jar
   status_check $log_file
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-log_file="/tmp/mysql.log"
+log_file="/tmp/rabbit.log"
 current_dir=$(pwd)
 source common.sh
 

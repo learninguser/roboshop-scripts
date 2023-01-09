@@ -116,7 +116,9 @@ PYTHON(){
   pip3.6 install -r requirements.txt &>> $log_file
   status_check $log_file
 
+  print_message "Updating passwords in Service file"
   sed -i -e "s/roboshop_rabbitmq_password/$roboshop_rabbitmq_password" $current_dir/files/payment.service
+  status_check $log_file
 
   SYSTEMD_SETUP
 }

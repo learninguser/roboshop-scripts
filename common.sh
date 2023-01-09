@@ -105,3 +105,18 @@ MAVEN(){
   SYSTEMD_SETUP
   LOAD_SCHEMA
 }
+
+PYTHON(){
+  print_message "Install Python"
+  yum install python36 gcc python3-devel -y &>> $log_file
+  APP_PREREQ
+
+  print_message "Downloading and installing dependencies"
+  cd /app
+  pip3.6 install -r requirements.txt &>> $log_file
+  status_check $log_file
+
+  sed -i -e "s/roboshop_rabbitmq_password/$roboshop_rabbitmq_password" $current_dir/files/payment.service
+
+  SYSTEMD_SETUP
+}

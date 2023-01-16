@@ -7,8 +7,6 @@ SG_NAME="Allow-all"
 env=dev
 #############################
 
-
-
 create_ec2() {
   PRIVATE_IP=$(aws ec2 run-instances \
       --image-id ${AMI_ID} \
@@ -27,7 +25,6 @@ create_ec2() {
   fi
 }
 
-
 ## Main Program
 AMI_ID=$(aws ec2 describe-images --filters "Name=name,Values=Centos-8-DevOps-Practice" | jq '.Images[].ImageId' | sed -e 's/"//g')
 if [ -z "${AMI_ID}" ]; then
@@ -41,8 +38,13 @@ if [ -z "${SGID}" ]; then
   exit 1
 fi
 
-
-for component in catalogue cart user shipping payment frontend mongodb mysql rabbitmq redis dispatch; do
+component=$1
+if [ -z $component ]; then
+  for component in catalogue cart user shipping payment frontend mongodb mysql rabbitmq redis dispatch; do
+    COMPONENT="${component}-${env}"
+    create_ec2
+  done
+else
   COMPONENT="${component}-${env}"
   create_ec2
-done
+fi

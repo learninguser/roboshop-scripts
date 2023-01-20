@@ -10,4 +10,4 @@ fi
 
 component="dispatch"
 schema="true"
-PYTHON
+GOLANG
